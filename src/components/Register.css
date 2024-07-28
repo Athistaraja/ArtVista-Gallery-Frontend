@@ -1,0 +1,71 @@
+.register-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: #f0f0f0;
+    padding: 20px;
+  }
+  
+  .register-container h2 {
+    margin-bottom: 20px;
+    font-size: 2em;
+    color: #333;
+  }
+
+  form{
+    width: 75%;
+  }
+  
+  .form-control {
+    margin-bottom: 15px;
+    width: 100%;
+  }
+  
+  .form-control label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .form-control input,
+  .form-control select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+  
+  .form-control .error {
+    color: red;
+    font-size: 0.9em;
+  }
+  
+  button {
+    padding: 10px 20px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    width: 100%;
+  }
+  
+  button:disabled {
+    background: #cccccc;
+  }
+  
+  @media (min-width: 768px) {
+    .register-container {
+      width: 50%;
+      margin: 0 auto;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      background: white;
+    }
+  }
+  
