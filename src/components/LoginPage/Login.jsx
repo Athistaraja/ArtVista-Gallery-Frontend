@@ -39,13 +39,17 @@ const Login = () => {
       localStorage.setItem('role', role);
 
       toast.success('Login successful');
-      navigate('/home');
+      if (role === 'artist') {
+        navigate('/artist-dashboard');
+      } else {
+        navigate('/home');
+      }
     } catch (error) {
       toast.error('Invalid Credentials');
     } finally {
-      setLoading(false); // Stop loading
       setSubmitting(false);
       resetForm();
+  
     }
   };
 

@@ -24,6 +24,10 @@ const Body = ({ addToCart, removeFromCart, cart }) => {
     
   }, []);
 
+//   useEffect(() => {
+//     localStorage.setItem("cartItems", JSON.stringify(cartItems))
+// }, [cartItems])
+
   const isInCart = (artworkId) => {
     return cart.some(item => item._id === artworkId);
   };

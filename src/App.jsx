@@ -10,7 +10,7 @@ import SearchResults from './components/HomePage/SearchResults';
 import Home from './components/HomePage/Home'
 import ArtworkFilter from './components/HomePage/ArtworkFilter';
 import PrivateRoute from './PrivateRoute';
-// import ArtistDashboard from './components/ArtistDashboard';
+import ArtistDashboard from './components/HomePage/ArtistDashboard/ArtistDashboard';
 import CartPage from './components/Cart/Cart'
 import { selectAuthToken, selectAuthRole } from './selectors/authSelectors';
 import './App.css';
@@ -30,6 +30,7 @@ const App = () => {
          <Route path="/home" element={<Home />} />
          <Route path="*" element={<Login />} />
          <Route path="/cart" element={<CartPage />} />
+         <Route path="/artist-dashboard" element={<ArtistDashboard />} />
          {/* <Route path="/artistdashboard" element={<ArtistDashboard />} /> */}
          {/* <Route path="/filter" element={<ArtworkFilter />} /> */}
          <Route path="/search-results" component={SearchResults} />
