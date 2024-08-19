@@ -20,6 +20,11 @@ button:disabled {
 .Toastify {
   font-family: Arial, sans-serif;
   font-size: 16px;
+  width: 600px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.Toastify__toast-theme--light {
+  background: var(--toastify-color-light);
+  color: var(--toastify-text-color-light);
 }

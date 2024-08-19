@@ -1,12 +1,17 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import Home from './components/Home';
-import Login from './components/Login';
-import Register from './components/Register';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import ArtistDashboard from './components/ArtistDashboard';
+import Login from './components/LoginPage/Login';
+import Register from './components/RegisterPage/Register';
+import SearchResults from './components/HomePage/SearchResults';
+// import Header from './components/HomePage/Header';
+// import Footer from './components/HomePage/Footer';
+// import ArtworkForm from './components/Artwork/ArtworkList';
+import Home from './components/HomePage/Home'
+import ArtworkFilter from './components/HomePage/ArtworkFilter';
+import PrivateRoute from './PrivateRoute';
+// import ArtistDashboard from './components/ArtistDashboard';
+import CartPage from './components/Cart/Cart'
 import { selectAuthToken, selectAuthRole } from './selectors/authSelectors';
 import './App.css';
 
@@ -14,20 +19,29 @@ const App = () => {
   const token = useSelector(selectAuthToken);
   const role = useSelector(selectAuthRole);
 
+
   return (
     <div className="app">
-      <Header />
       <Routes>
-        <Route path="/" element={token ? <Home /> : <Navigate to="/login" />} />
-        <Route path="/login" element={token ? <Navigate to="/" /> : <Login />} />
+        {/* <Route path="/" element={token ? <Home /> : <Navigate to="/login" />} />
+        <Route path="/login" element={token ? <Navigate to="/" /> : <Login />} /> */}
+        {/* <Route path="/" element={<HomePage />} /> */}
+            {/* Add more routes as needed for your application */}
+         <Route path="/home" element={<Home />} />
+         <Route path="*" element={<Login />} />
+         <Route path="/cart" element={<CartPage />} />
+         {/* <Route path="/artistdashboard" element={<ArtistDashboard />} /> */}
+         {/* <Route path="/filter" element={<ArtworkFilter />} /> */}
+         <Route path="/search-results" component={SearchResults} />
+        {/* <Route element={<PrivateRoute />}>
+          <Route path="/add-artwork" element={<ArtworkForm />} />
+        </Route> */}
         <Route path="/register" element={token ? <Navigate to="/" /> : <Register />} />
-        <Route path="/artist" element={token && role === 'artist' ? <ArtistDashboard /> : <Navigate to="/" />} />
+        {/* <Route path="/artist" element={token && role === 'artist' ? <ArtistDashboard /> : <Navigate to="/" />} /> */}
         {/* Add more routes as needed */}
       </Routes>
-      <Footer />
       
     </div>
   );
 };
-
 export default App;

@@ -1,0 +1,25 @@
+.search-filter-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .artworks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+  }
+  
+  .artwork-card {
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+  }
+  
+  .artwork-image {
+    width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+  }
+  

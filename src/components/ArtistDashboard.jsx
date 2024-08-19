@@ -1,47 +1,40 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchArtItems } from '../slices/artSlice';
-import { addArtItem, updateArtItem, deleteArtItem } from '../slices/artSlice';
-import './ArtistDashboard.css';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { API } from './API';
 
 const ArtistDashboard = () => {
-  const dispatch = useDispatch();
-  const { items, loading, error } = useSelector(state => state.art);
+  const [artworks, setArtworks] = useState([]);
 
   useEffect(() => {
-    dispatch(fetchArtItems());
-  }, [dispatch]);
+    const fetchArtworks = async () => {
+      try {
+        const token = localStorage.getItem('x-auth-token');
+        const response = await axios.get(`${API}/artwork/`, {
+          headers: {
+            'x-auth-token': token,
+          },
+        });
+        setArtworks(response.data);
+      } catch (error) {
+        console.error('Error fetching artworks:', error);
+      }
+    };
 
-  const handleAddArt = (newArt) => {
-    dispatch(addArtItem(newArt));
-  };
-
-  const handleUpdateArt = (updatedArt) => {
-    dispatch(updateArtItem(updatedArt));
-  };
-
-  const handleDeleteArt = (artId) => {
-    dispatch(deleteArtItem(artId));
-  };
+    fetchArtworks();
+  }, []);
 
   return (
-    <div className="artist-dashboard">
-      <h1>Manage Your Art</h1>
-      {loading && <p>Loading...</p>}
-      {error && <p>Error: {error}</p>}
-      <div className="art-list">
-        {items.map(item => (
-          <div key={item._id} className="art-card">
-            <img src={item.image} alt={item.title} />
-            <h3>{item.title}</h3>
-            <p>{item.description}</p>
-            <p>${item.price}</p>
-            <button onClick={() => handleUpdateArt(item)}>Update</button>
-            <button onClick={() => handleDeleteArt(item._id)}>Delete</button>
-          </div>
-        ))}
-      </div>
-      <button onClick={() => handleAddArt({ title: '', description: '', price: 0, image: '' })}>Add New Art</button>
+    <div>
+      <h1>Artist Dashboard</h1>
+      {artworks.map((artwork) => (
+        <div key={artwork._id}>
+          <h3>{artwork.title}</h3>
+          <p>Artist: {artwork.artist.username}</p> {/* Display the artist's name */}
+          <p>{artwork.description}</p>
+          <p>Rs.{artwork.price}</p>
+          {/* Add more fields as needed */}
+        </div>
+      ))}
     </div>
   );
 };
