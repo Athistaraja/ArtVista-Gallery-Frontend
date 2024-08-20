@@ -1,12 +1,20 @@
 import React, { useState } from 'react';
-import { Navbar, Nav, Badge, Form, FormControl, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-// import axios from 'axios';
-// import { API } from '../API';
+import { Navbar, Nav, Badge } from 'react-bootstrap';
+import { Link, useNavigate } from 'react-router-dom';
 import './Header.css'; // Ensure this is correctly imported
 
 const Header = ({ cartItems }) => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate(); // For redirecting after logout
+
+  const handleLogout = () => {
+    // Clear JWT and user data from local storage
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('role');
+
+    // Redirect to the login page
+    navigate('/login');
+  };
 
   return (
     <Navbar expand="lg" className="custom-navbar">
@@ -21,8 +29,8 @@ const Header = ({ cartItems }) => {
             <i className="fas fa-shopping-cart"></i>
             <Badge pill className="cart-badge">{cartItems}</Badge>
           </Nav.Link>
-          <Nav.Link as={Link} to="/login">Login</Nav.Link>
           <Nav.Link as={Link} to="/artistdashboard">Artist Dashboard</Nav.Link>
+          <Nav.Link onClick={handleLogout}>Logout</Nav.Link> {/* Attach the logout function here */}
         </Nav>
       </Navbar.Collapse>
     </Navbar>
