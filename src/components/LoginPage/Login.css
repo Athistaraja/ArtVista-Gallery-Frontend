@@ -40,6 +40,27 @@
     color: red;
     font-size: 0.875rem;
   }
+
+  .password-container {
+    position: relative;
+  }
+  
+  .toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0;
+  }
+  
+  .toggle-password:hover {
+    color: #0056b3;
+  }
   
   .submit-button {
     width: 100%;

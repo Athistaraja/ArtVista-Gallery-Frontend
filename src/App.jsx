@@ -12,12 +12,9 @@ import ArtworkFilter from './components/HomePage/ArtworkFilter';
 import PrivateRoute from './PrivateRoute';
 import ArtistDashboard from './components/HomePage/ArtistDashboard/ArtistDashboard';
 import CartPage from './components/Cart/Cart'
-import { selectAuthToken, selectAuthRole } from './selectors/authSelectors';
 import './App.css';
 
 const App = () => {
-  const token = useSelector(selectAuthToken);
-  const role = useSelector(selectAuthRole);
 
 
   return (
@@ -30,14 +27,14 @@ const App = () => {
          <Route path="/home" element={<Home />} />
          <Route path="*" element={<Login />} />
          <Route path="/cart" element={<CartPage />} />
+         <Route path="/register" element={<Register />} />
          <Route path="/artist-dashboard" element={<ArtistDashboard />} />
          {/* <Route path="/artistdashboard" element={<ArtistDashboard />} /> */}
          {/* <Route path="/filter" element={<ArtworkFilter />} /> */}
-         <Route path="/search-results" component={SearchResults} />
         {/* <Route element={<PrivateRoute />}>
           <Route path="/add-artwork" element={<ArtworkForm />} />
         </Route> */}
-        <Route path="/register" element={token ? <Navigate to="/" /> : <Register />} />
+        {/* <Route path="/register" element={token ? <Navigate to="/" /> : <Register />} /> */}
         {/* <Route path="/artist" element={token && role === 'artist' ? <ArtistDashboard /> : <Navigate to="/" />} /> */}
         {/* Add more routes as needed */}
       </Routes>

@@ -5,12 +5,15 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import './Login.css';
 import '../toastify.css';
 
 const Login = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); // State to manage password visibility
 
   const initialValues = {
     email: '',
@@ -49,7 +52,6 @@ const Login = () => {
     } finally {
       setSubmitting(false);
       resetForm();
-  
     }
   };
 
@@ -76,12 +78,21 @@ const Login = () => {
             </div>
             <div className="form-group">
               <label htmlFor="password">Password</label>
-              <Field
-                type="password"
-                name="password"
-                id="password"
-                className="form-control"
-              />
+              <div className="password-container">
+                <Field
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  id="password"
+                  className="form-control"
+                />
+                <button
+                  type="button"
+                  className="toggle-password"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+                </button>
+              </div>
               <ErrorMessage name="password" component="div" className="error-message" />
             </div>
             <button type="submit" className="submit-button" disabled={isSubmitting || loading}>
