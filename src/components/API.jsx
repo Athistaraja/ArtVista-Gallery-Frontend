@@ -1,1 +1,1 @@
-export const API = "https://willowy-bienenstitch-5869df.netlify.app/api"
+export const API = "https://artvist-gallery-backend-1.onrender.com/api"
