@@ -1,1 +1,1 @@
-export const API = "http://localhost:4500/api"
+export const API = "https://willowy-bienenstitch-5869df.netlify.app/api"
