@@ -13,7 +13,7 @@ import '../toastify.css';
 const Login = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false); // State to manage password visibility
+  const [showPassword, setShowPassword] = useState(false);
 
   const initialValues = {
     email: '',
@@ -51,6 +51,7 @@ const Login = () => {
       toast.error('Invalid Credentials');
     } finally {
       setSubmitting(false);
+      setLoading(false); // Stop loading
       resetForm();
     }
   };
