@@ -80,3 +80,8 @@
     background-color: #0056b3;
   }
   
+  @media (max-width: 768px) {
+    .form-container {
+      width: 90%; /* Make the form take more space on smaller screens */
+    }
+  }
