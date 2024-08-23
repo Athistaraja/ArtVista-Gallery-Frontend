@@ -48,60 +48,62 @@ const Register = () => {
   };
 
   return (
-    <div className="form-container">
-      <h2><b>Artvista Gallery Register</b></h2>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={onSubmit}
-      >
-        {({ isSubmitting }) => (
-          <Form>
-            <div className="form-group">
-              <label htmlFor="username">Username</label>
-              <Field autoComplete="on" type="text" id="username" name="username" className="form-control" />
-              <ErrorMessage name="username" component="div" className="text-danger" />
-            </div>
-            <div className="form-group">
-              <label htmlFor="email">Email</label>
-              <Field autoComplete="on" type="email" id="email" name="email" className="form-control" />
-              <ErrorMessage name="email" component="div" className="text-danger" />
-            </div>
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <div className="password-container">
-                <Field
-                  type={showPassword ? 'text' : 'password'}
-                  id="password"
-                  name="password"
-                  className="form-control"
-                />
-                <button
-                  type="button"
-                  className="toggle-password"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
-                </button>
+    <div className='register'>
+      <div className="form-container">
+        <h2><b>Artvista Gallery Register</b></h2>
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={onSubmit}
+        >
+          {({ isSubmitting }) => (
+            <Form>
+              <div className="form-group">
+                <label htmlFor="username">Username</label>
+                <Field autoComplete="on" type="text" id="username" name="username" className="form-control" />
+                <ErrorMessage name="username" component="div" className="text-danger" />
               </div>
-              <ErrorMessage name="password" component="div" className="text-danger" />
-            </div>
-            <div className="form-group">
-              <label htmlFor="role">Role</label>
-              <Field as="select" id="role" name="role" className="form-control">
-                <option value="user">User</option>
-                <option value="artist">Artist</option>
-              </Field>
-              <ErrorMessage name="role" component="div" className="text-danger" />
-            </div>
-            <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
-              Register
-            </button>
-          </Form>
-        )}
-      </Formik>
-      <div className="redirect-link">
-        Already have an account? <Link to="/">Go to Login</Link>
+              <div className="form-group">
+                <label htmlFor="email">Email</label>
+                <Field autoComplete="on" type="email" id="email" name="email" className="form-control" />
+                <ErrorMessage name="email" component="div" className="text-danger" />
+              </div>
+              <div className="form-group">
+                <label htmlFor="password">Password</label>
+                <div className="password-container">
+                  <Field
+                    type={showPassword ? 'text' : 'password'}
+                    id="password"
+                    name="password"
+                    className="form-control"
+                  />
+                  <button
+                    type="button"
+                    className="toggle-password"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+                  </button>
+                </div>
+                <ErrorMessage name="password" component="div" className="text-danger" />
+              </div>
+              <div className="form-group">
+                <label htmlFor="role">Role</label>
+                <Field as="select" id="role" name="role" className="form-control">
+                  <option value="user">User</option>
+                  <option value="artist">Artist</option>
+                </Field>
+                <ErrorMessage name="role" component="div" className="text-danger" />
+              </div>
+              <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
+                Register
+              </button>
+            </Form>
+          )}
+        </Formik>
+        <div className="redirect-link">
+          Already have an account? <Link to="/">Go to Login</Link>
+        </div>
       </div>
     </div>
   );

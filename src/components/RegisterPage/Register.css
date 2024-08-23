@@ -1,14 +1,28 @@
+/* General styling */
+.register {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-image: url('https://cdn.prod.website-files.com/5c0a715b09ba6f668d586b2e/622cf05bf85ef6c4eae2f890_Muse_Ikonospace-p-1080.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  background-blend-mode: darken;
+  z-index: 1; /* Ensure the register form container is beneath the toast notifications */
+}
 
 .form-container {
-    max-width: 400px;
-    margin: 0 auto;
-    margin-top: 30px;
-    padding: 2rem;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    background-color: rgba(255, 255, 255, 0);
-  }
+  background-color: rgba(255, 255, 255, 0.9); /* White with some transparency */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 100%;
+  z-index: 2; /* Lower z-index so toast notifications can appear on top */
+  position: relative; /* Ensures it doesn't interfere with the toast notifications */
+}
+
   
   .form-container h2 {
     text-align: center;
@@ -98,4 +112,20 @@
 
 .Toastify__progress-bar {
   background-color: rgba(255, 255, 255, 0.7);
+}
+
+@media (max-width: 768px) {
+  .login-form-container {
+    width: 90%;
+    padding: 1rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+  }
+
+  .submit-button {
+    padding: 0.75rem;
+    font-size: 1rem;
+  }
 }
