@@ -32,7 +32,7 @@ const Login = () => {
   });
 
   const handleLogin = async (values, { setSubmitting, resetForm }) => {
-    setLoading(true); // Start loading
+    setLoading(true);
     try {
       const response = await axios.post(`${API}/auth/login`, values);
       const { token, userId, role } = response.data;
@@ -51,59 +51,60 @@ const Login = () => {
       toast.error('Invalid Credentials');
     } finally {
       setSubmitting(false);
-      setLoading(false); // Stop loading
+      setLoading(false);
       resetForm();
     }
   };
 
   return (
-    <div className="login-form-container">
-      <h2><b>Artvista Gallery Login</b></h2>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleLogin}
-      >
-        {({ isSubmitting }) => (
-          <Form>
-            <div className="form-group">
-              <label htmlFor="email">Email</label>
-              <Field
-                autoComplete="on"
-                type="email"
-                name="email"
-                id="email"
-                className="form-control"
-              />
-              <ErrorMessage name="email" component="div" className="error-message" />
-            </div>
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <div className="password-container">
+    <div className='login'>
+      <div className="login-form-container">
+        <h2><b>Artvista Gallery Login</b></h2>
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleLogin}
+        >
+          {({ isSubmitting }) => (
+            <Form>
+              <div className="form-group">
+                <label htmlFor="email">Email</label>
                 <Field
-                  type={showPassword ? 'text' : 'password'}
-                  name="password"
-                  id="password"
+                  autoComplete="on"
+                  type="email"
+                  name="email"
+                  id="email"
                   className="form-control"
                 />
-                <button
-                  type="button"
-                  className="toggle-password"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
-                </button>
+                <ErrorMessage name="email" component="div" className="error-message" />
               </div>
-              <ErrorMessage name="password" component="div" className="error-message" />
-            </div>
-            <button type="submit" className="submit-button" disabled={isSubmitting || loading}>
-              {loading ? 'Loading...' : 'Login'}
-            </button>
-          </Form>
-        )}
-      </Formik>
-      <div className="redirect-link">
-        Don't have an account? <Link to="/register">Go to Register</Link>
+              <div className="form-group password-group">
+                <label htmlFor="password">Password</label>
+                <div className="password-container">
+                  <Field
+                    type={showPassword ? 'text' : 'password'}
+                    name="password"
+                    id="password"
+                    className="form-control"
+                  />
+                  <span
+                    className="toggle-password"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+                  </span>
+                </div>
+                <ErrorMessage name="password" component="div" className="error-message" />
+              </div>
+              <button type="submit" className="submit-button" disabled={isSubmitting || loading}>
+                {loading ? <span className="loading-text"></span> : 'Login'}
+              </button>
+            </Form>
+          )}
+        </Formik>
+        <div className="redirect-link">
+          Don't have an account? <Link to="/register">Go to Register</Link>
+        </div>
       </div>
     </div>
   );
