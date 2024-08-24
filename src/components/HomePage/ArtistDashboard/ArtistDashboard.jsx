@@ -1,82 +1,188 @@
+// src/components/ArtistDashboard.jsx
 import React, { useEffect, useState } from 'react';
-import { Container, Form, Button } from 'react-bootstrap';
-import axios from 'axios';
-import { API } from '../../API';
+import { Container, Row, Col, Card, Button, Form, Modal } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchArtworks, addArtwork, deleteArtwork, updateArtwork } from '../../slices/artworkSlice';
+import { selectArtworks, selectArtworksStatus, selectArtworksError } from '../../slices/artworkSelectors';
+import { logout } from '../../slices/authSlice';
 import { toast } from 'react-toastify';
+import logo from '../../../assets/logout.png'; // Path to your logo image
 
 const ArtistDashboard = () => {
-  const [profile, setProfile] = useState({
-    name: '',
-    bio: '',
-    portfolio: '',
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const artworks = useSelector(selectArtworks);
+  const status = useSelector(selectArtworksStatus);
+  const error = useSelector(selectArtworksError);
+  const { token, username } = useSelector((state) => state.auth || {});
+
+  const [newArtwork, setNewArtwork] = useState({
+    title: '',
+    description: '',
+    price: '',
+    image: '',
+    category: '',
   });
 
-  const userId = localStorage.getItem('userId');
+  const [selectedArtwork, setSelectedArtwork] = useState(null); // Track the selected artwork for updating
+  const [showModal, setShowModal] = useState(false); // Control the visibility of the update modal
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await axios.get(`${API}/artist/${userId}`);
-        setProfile(response.data);
-      } catch (error) {
-        console.error('Error fetching profile:', error);
-      }
-    };
-
-    fetchProfile();
-  }, [userId]);
+    if (token) {
+      dispatch(fetchArtworks(token));
+    }
+  }, [dispatch, token]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setProfile({ ...profile, [name]: value });
+    setNewArtwork({ ...newArtwork, [name]: value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleAddArtwork = (e) => {
     e.preventDefault();
-    try {
-      await axios.put(`${API}/artist/${userId}`, profile);
-      toast.success('Profile updated successfully');
-    } catch (error) {
-      toast.error('Error updating profile');
+    if (token) {
+      dispatch(addArtwork({ newArtwork, token }))
+        .then(() => {
+          toast.success('Artwork added successfully');
+          setNewArtwork({ title: '', description: '', price: '', image: '', category: '' });
+        })
+        .catch(() => toast.error('Error adding artwork'));
     }
+  };
+
+  const handleDeleteArtwork = (artworkId) => {
+    if (token) {
+      dispatch(deleteArtwork({ artworkId, token }))
+        .then(() => toast.success('Artwork deleted successfully'))
+        .catch(() => toast.error('Error deleting artwork'));
+    }
+  };
+
+  const handleUpdateArtwork = (e) => {
+    e.preventDefault();
+    if (token && selectedArtwork) {
+      dispatch(updateArtwork({ artworkId: selectedArtwork._id, updatedArtwork: newArtwork, token }))
+        .then(() => {
+          toast.success('Artwork updated successfully');
+          setShowModal(false);
+          setSelectedArtwork(null);
+          setNewArtwork({ title: '', description: '', price: '', image: '', category: '' });
+        })
+        .catch(() => toast.error('Error updating artwork'));
+    }
+  };
+
+  const openUpdateModal = (artwork) => {
+    setSelectedArtwork(artwork);
+    setNewArtwork({
+      title: artwork.title,
+      description: artwork.description,
+      price: artwork.price,
+      image: artwork.image,
+      category: artwork.category,
+    });
+    setShowModal(true);
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
+    toast.success('Logged out successfully');
+    navigate('/login');
   };
 
   return (
     <Container className="my-5">
+      <header className="d-flex justify-content-between align-items-center mb-4">
+        <img src={logo} alt="Logo" style={{ height: '50px' }} />
+        <Button variant="outline-danger" onClick={handleLogout}>
+          Logout
+        </Button>
+      </header>
+
       <h2>Artist Dashboard</h2>
-      <Form onSubmit={handleSubmit}>
-        <Form.Group controlId="name">
-          <Form.Label>Name</Form.Label>
-          <Form.Control
-            type="text"
-            name="name"
-            value={profile.name}
-            onChange={handleChange}
-            required
-          />
+      <h3>Welcome, {username}</h3>
+
+      <Form onSubmit={handleAddArtwork} className="my-4">
+        <Form.Group controlId="title">
+          <Form.Label>Title</Form.Label>
+          <Form.Control type="text" name="title" value={newArtwork.title} onChange={handleChange} required />
         </Form.Group>
-        <Form.Group controlId="bio">
-          <Form.Label>Bio</Form.Label>
-          <Form.Control
-            as="textarea"
-            name="bio"
-            value={profile.bio}
-            onChange={handleChange}
-            required
-          />
+        <Form.Group controlId="description">
+          <Form.Label>Description</Form.Label>
+          <Form.Control as="textarea" name="description" value={newArtwork.description} onChange={handleChange} required />
         </Form.Group>
-        <Form.Group controlId="portfolio">
-          <Form.Label>Portfolio</Form.Label>
-          <Form.Control
-            type="text"
-            name="portfolio"
-            value={profile.portfolio}
-            onChange={handleChange}
-            required
-          />
+        <Form.Group controlId="price">
+          <Form.Label>Price</Form.Label>
+          <Form.Control type="number" name="price" value={newArtwork.price} onChange={handleChange} required />
         </Form.Group>
-        <Button type="submit" className="mt-3">Save Profile</Button>
+        <Form.Group controlId="image">
+          <Form.Label>Image URL</Form.Label>
+          <Form.Control type="text" name="image" value={newArtwork.image} onChange={handleChange} required />
+        </Form.Group>
+        <Form.Group controlId="category">
+          <Form.Label>Category</Form.Label>
+          <Form.Control type="text" name="category" value={newArtwork.category} onChange={handleChange} required />
+        </Form.Group>
+        <Button type="submit">Add Artwork</Button>
       </Form>
+
+      {status === 'loading' && <p>Loading...</p>}
+      {status === 'failed' && <p>Error: {error}</p>}
+
+      <Row>
+        {status === 'succeeded' &&
+          artworks.map((artwork) => (
+            <Col md={4} key={artwork._id}>
+              <Card className="mb-4">
+                <Card.Img variant="top" src={artwork.image} alt={artwork.title} />
+                <Card.Body>
+                  <Card.Title>{artwork.title}</Card.Title>
+                  <Card.Text>{artwork.description}</Card.Text>
+                  <Card.Text>Rs.{artwork.price}</Card.Text>
+                  <Button variant="danger" onClick={() => handleDeleteArtwork(artwork._id)}>
+                    Delete
+                  </Button>
+                  <Button variant="primary" className="ms-2" onClick={() => openUpdateModal(artwork)}>
+                    Update
+                  </Button>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+      </Row>
+
+      {/* Modal for updating artwork */}
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Update Artwork</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleUpdateArtwork}>
+            <Form.Group controlId="title">
+              <Form.Label>Title</Form.Label>
+              <Form.Control type="text" name="title" value={newArtwork.title} onChange={handleChange} required />
+            </Form.Group>
+            <Form.Group controlId="description">
+              <Form.Label>Description</Form.Label>
+              <Form.Control as="textarea" name="description" value={newArtwork.description} onChange={handleChange} required />
+            </Form.Group>
+            <Form.Group controlId="price">
+              <Form.Label>Price</Form.Label>
+              <Form.Control type="number" name="price" value={newArtwork.price} onChange={handleChange} required />
+            </Form.Group>
+            <Form.Group controlId="image">
+              <Form.Label>Image URL</Form.Label>
+              <Form.Control type="text" name="image" value={newArtwork.image} onChange={handleChange} required />
+            </Form.Group>
+            <Form.Group controlId="category">
+              <Form.Label>Category</Form.Label>
+              <Form.Control type="text" name="category" value={newArtwork.category} onChange={handleChange} required />
+            </Form.Group>
+            <Button type="submit">Update Artwork</Button>
+          </Form>
+        </Modal.Body>
+      </Modal>
     </Container>
   );
 };

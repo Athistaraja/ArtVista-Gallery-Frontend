@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Button, Form } from 'react-bootstrap';
 import axios from 'axios';
+import { addToCart } from '../slices/cartSlice';
+import {useDispatch}  from 'react-redux';
 import { API } from '../API';
 import Rating from 'react-rating'; 
 import './Body.css'; 
@@ -9,6 +11,7 @@ const Body = ({ addToCart, removeFromCart, cart }) => {
   const [artworks, setArtworks] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchArtworks = async () => {
@@ -24,13 +27,15 @@ const Body = ({ addToCart, removeFromCart, cart }) => {
     
   }, []);
 
-//   useEffect(() => {
-//     localStorage.setItem("cartItems", JSON.stringify(cartItems))
-// }, [cartItems])
+  const handleAddToCart = (artwork) => {
+    console.log('Add to cart')
+    dispatch(addToCart(artwork))
+}
 
   const isInCart = (artworkId) => {
     return cart.some(item => item._id === artworkId);
   };
+ 
 
   const handleRatingChange = async (rating, artworkId) => {
     try {
@@ -47,7 +52,6 @@ const Body = ({ addToCart, removeFromCart, cart }) => {
   return (
     <Container className="my-5">
       <h2 className="text-center mb-4">Welcome to ArtShop</h2>
-
       <Form className="mb-4">
   <Form.Group controlId="categorySelect" className="filter-form-group">
     <Form.Label className="filter-form-label">Filter by Category</Form.Label>
@@ -57,7 +61,7 @@ const Body = ({ addToCart, removeFromCart, cart }) => {
       onChange={(e) => setSelectedCategory(e.target.value)}
       className="filter-form-control"
     >
-      <option value="">All Categories</option>
+      <option value="">All </option>
       <option value="painting">Painting</option>
       <option value="animation">Animation</option>
       <option value="drawing">Drawing</option>
@@ -94,7 +98,7 @@ const Body = ({ addToCart, removeFromCart, cart }) => {
                       <i className="fa fa-shopping-cart"></i> Remove from Cart
                     </Button>
                   ) : (
-                    <Button variant="primary" onClick={() => addToCart(artwork)}>
+                    <Button variant="primary" onClick={() => handleAddToCart(artwork)}>
                       <i className="fa fa-shopping-cart"></i> Add to Cart
                     </Button>
                   )}

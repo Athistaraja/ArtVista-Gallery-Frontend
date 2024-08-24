@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Navbar, Nav, Badge } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import './Header.css'; // Ensure this is correctly imported
 
 const Header = ({ cartItems }) => {
@@ -13,6 +14,7 @@ const Header = ({ cartItems }) => {
     localStorage.removeItem('role');
 
     // Redirect to the login page
+    toast.success('Logged out successfully');
     navigate('/login');
   };
 
