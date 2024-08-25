@@ -10,28 +10,32 @@ const initialState = {
 };
 
 // Thunks
-export const fetchArtworks = createAsyncThunk('artworks/fetchArtworks', async (token) => {
+export const fetchArtworks = createAsyncThunk('artworks/fetchArtworks', async (_, { getState }) => {
+  const token = getState().auth.token; // assuming your auth slice stores the token
   const response = await axios.get(`${API}/artwork/my-artworks`, {
     headers: { 'x-auth-token': `Bearer ${token}` }
   });
   return response.data;
 });
 
-export const addArtwork = createAsyncThunk('artworks/addArtwork', async ({ newArtwork, token }) => {
+export const addArtwork = createAsyncThunk('artworks/addArtwork', async ({ newArtwork }, { getState }) => {
+  const token = getState().auth.token;
   const response = await axios.post(`${API}/artwork/add`, newArtwork, {
     headers: { 'x-auth-token': `Bearer ${token}` }
   });
   return response.data.artwork;
 });
 
-export const updateArtwork = createAsyncThunk('artworks/updateArtwork', async ({ artworkId, updatedArtwork, token }) => {
+export const updateArtwork = createAsyncThunk('artworks/updateArtwork', async ({ artworkId, updatedArtwork }, { getState }) => {
+  const token = getState().auth.token;
   const response = await axios.put(`${API}/artwork/${artworkId}`, updatedArtwork, {
     headers: { 'x-auth-token': `Bearer ${token}` }
   });
   return response.data;
 });
 
-export const deleteArtwork = createAsyncThunk('artworks/deleteArtwork', async ({ artworkId, token }) => {
+export const deleteArtwork = createAsyncThunk('artworks/deleteArtwork', async ({ artworkId }, { getState }) => {
+  const token = getState().auth.token;
   await axios.delete(`${API}/artwork/${artworkId}`, {
     headers: { 'x-auth-token': `Bearer ${token}` }
   });
