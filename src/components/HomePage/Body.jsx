@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Button, Form } from 'react-bootstrap';
 import axios from 'axios';
-import { addToCart } from '../slices/cartSlice';
-import {useDispatch}  from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart, removeFromCart } from '../slices/cartSlice';
 import { API } from '../API';
 import Rating from 'react-rating'; 
 import './Body.css'; 
 
-const Body = ({ addToCart, removeFromCart, cart }) => {
+const Body = () => {
   const [artworks, setArtworks] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const dispatch = useDispatch();
+  const cart = useSelector((state) => state.cart);
 
   useEffect(() => {
     const fetchArtworks = async () => {
@@ -24,18 +25,19 @@ const Body = ({ addToCart, removeFromCart, cart }) => {
     };
 
     fetchArtworks();
-    
   }, []);
 
   const handleAddToCart = (artwork) => {
-    console.log('Add to cart')
-    dispatch(addToCart(artwork))
-}
+    dispatch(addToCart(artwork));
+  };
+
+  const handleRemoveFromCart = (artworkId) => {
+    dispatch(removeFromCart(artworkId));
+  };
 
   const isInCart = (artworkId) => {
     return cart.some(item => item._id === artworkId);
   };
- 
 
   const handleRatingChange = async (rating, artworkId) => {
     try {
@@ -53,32 +55,31 @@ const Body = ({ addToCart, removeFromCart, cart }) => {
     <Container className="my-5">
       <h2 className="text-center mb-4">Welcome to ArtShop</h2>
       <Form className="mb-4">
-  <Form.Group controlId="categorySelect" className="filter-form-group">
-    <Form.Label className="filter-form-label">Filter by Category</Form.Label>
-    <Form.Control
-      as="select"
-      value={selectedCategory}
-      onChange={(e) => setSelectedCategory(e.target.value)}
-      className="filter-form-control"
-    >
-      <option value="">All </option>
-      <option value="painting">Painting</option>
-      <option value="animation">Animation</option>
-      <option value="drawing">Drawing</option>
-      <option value="sculpture">Sculpture</option>
-      {categories.map((category) => (
-        <option key={category} value={category}>
-          {category}
-        </option>
-      ))}
-    </Form.Control>
-  </Form.Group>
-</Form>
-
+        <Form.Group controlId="categorySelect" className="filter-form-group">
+          <Form.Label className="filter-form-label">Filter by Category</Form.Label>
+          <Form.Control
+            as="select"
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="filter-form-control"
+          >
+            <option value="">All</option>
+            <option value="painting">Painting</option>
+            <option value="animation">Animation</option>
+            <option value="drawing">Drawing</option>
+            <option value="sculpture">Sculpture</option>
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </Form.Control>
+        </Form.Group>
+      </Form>
 
       <Row>
         {filteredArtworks.map((artwork) => (
-          <Col md={4} key={artwork._id}>
+          <Col xs={12} sm={6} md={4} lg={3} key={artwork._id} className="d-flex align-items-stretch">
             <Card className="mb-4">
               <Card.Img variant="top" src={artwork.image} alt={artwork.title} />
               <Card.Body>
@@ -94,7 +95,7 @@ const Body = ({ addToCart, removeFromCart, cart }) => {
                 />
                 <div className="mt-3">
                   {isInCart(artwork._id) ? (
-                    <Button variant="danger" onClick={() => removeFromCart(artwork._id)}>
+                    <Button variant="danger" onClick={() => handleRemoveFromCart(artwork._id)}>
                       <i className="fa fa-shopping-cart"></i> Remove from Cart
                     </Button>
                   ) : (

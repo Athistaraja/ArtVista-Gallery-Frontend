@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Login from './components/LoginPage/Login';
@@ -12,9 +12,17 @@ import ArtworkFilter from './components/HomePage/ArtworkFilter';
 import PrivateRoute from './PrivateRoute';
 import ArtistDashboard from './components/HomePage/ArtistDashboard/ArtistDashboard';
 import CartPage from './components/Cart/Cart'
+import OrderConfirmationPage from './components/OrderConfirmationPage ';
+import CheckoutPage from './components/CheckoutPage/CheckoutPage';
 import './App.css';
 
 const App = () => {
+
+  const cart = useSelector((state) => state.cart);
+
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }, [cart]);
 
 
   return (
@@ -29,6 +37,8 @@ const App = () => {
          <Route path="/cart" element={<CartPage />} />
          <Route path="/register" element={<Register />} />
          <Route path="/artist-dashboard" element={<ArtistDashboard />} />
+         <Route path="/checkout" element={<CheckoutPage />} />
+         <Route path="/order-confirmation" element={<OrderConfirmationPage />} />
          {/* <Route path="/artistdashboard" element={<ArtistDashboard />} /> */}
          {/* <Route path="/filter" element={<ArtworkFilter />} /> */}
         {/* <Route element={<PrivateRoute />}>

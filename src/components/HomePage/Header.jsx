@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Navbar, Nav, Badge } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useSelector } from 'react-redux';
 import './Header.css'; // Ensure this is correctly imported
 
-const Header = ({ cartItems }) => {
+const Header = () => {
+  const cart = useSelector((state) => state.cart);
   const navigate = useNavigate(); // For redirecting after logout
 
   const handleLogout = () => {
@@ -25,14 +27,14 @@ const Header = ({ cartItems }) => {
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="ml-auto">
           <Nav.Link as={Link} to="/">Home</Nav.Link>
-          {/* <Nav.Link as={Link} to="/about">About</Nav.Link>
-          <Nav.Link as={Link} to="/contact">Contact</Nav.Link> */}
           <Nav.Link as={Link} to="/cart" className="cart-link">
             <i className="fas fa-shopping-cart"></i>
-            <Badge pill className="cart-badge">{cartItems}</Badge>
+            {cart.length > 0 && (
+              <Badge pill className="cart-badge">{cart.length}</Badge>
+            )}
           </Nav.Link>
           <Nav.Link as={Link} to="/artistdashboard">Artist Dashboard</Nav.Link>
-          <Nav.Link onClick={handleLogout}>Logout</Nav.Link> {/* Attach the logout function here */}
+          <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
         </Nav>
       </Navbar.Collapse>
     </Navbar>

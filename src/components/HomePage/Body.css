@@ -124,21 +124,13 @@
 }
 
 /* Media Queries for Responsive Design */
-@media (max-width: 768px) {
-  .card-img-top {
-      height: 150px;
+
+@media (max-width: 767px) {
+  .card {
+    margin-bottom: 20px;
   }
 
-  .card-body {
-      padding: 1rem;
-  }
-
-  .card-title {
-      font-size: 1.125rem;
-  }
-
-  .form-control,
-  .select-filter {
-      font-size: 0.875rem;
+  .filter-form-control {
+    width: 100%;
   }
 }
