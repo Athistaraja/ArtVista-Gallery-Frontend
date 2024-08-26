@@ -10,13 +10,25 @@ const initialState = {
 };
 
 // Thunks
-export const fetchArtworks = createAsyncThunk('artworks/fetchArtworks', async (_, { getState }) => {
-  const token = getState().auth.token; // assuming your auth slice stores the token
-  const response = await axios.get(`${API}/artwork/my-artworks`, {
-    headers: { 'x-auth-token': `Bearer ${token}` }
-  });
-  return response.data;
-});
+export const fetchArtworks = createAsyncThunk(
+  'artworks/fetchArtworks',
+  async (token, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${API}/artwork/my-artworks`, {
+        headers: {
+          'x-auth-token': `Bearer ${token}`, // Pass token in the Authorization header
+        },
+      });
+      return response.data;
+    } catch (error) {
+      if (!error.response) {
+        throw error;
+      }
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 
 export const addArtwork = createAsyncThunk('artworks/addArtwork', async ({ newArtwork }, { getState }) => {
   const token = getState().auth.token;

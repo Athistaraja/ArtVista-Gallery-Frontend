@@ -28,8 +28,9 @@ const ArtistDashboard = () => {
   const [showModal, setShowModal] = useState(false); // Control the visibility of the update modal
 
   useEffect(() => {
-    if (token) {
-      dispatch(fetchArtworks(token));
+    const storedToken = localStorage.getItem('token') || token; // Get token from localStorage or Redux
+    if (storedToken) {
+      dispatch(fetchArtworks(storedToken));
     }
   }, [dispatch, token]);
 
@@ -40,8 +41,9 @@ const ArtistDashboard = () => {
 
   const handleAddArtwork = (e) => {
     e.preventDefault();
-    if (token) {
-      dispatch(addArtwork({ newArtwork, token }))
+    const storedToken = localStorage.getItem('token') || token;
+    if (storedToken) {
+      dispatch(addArtwork({ newArtwork, token: storedToken }))
         .then(() => {
           toast.success('Artwork added successfully');
           setNewArtwork({ title: '', description: '', price: '', image: '', category: '' });
@@ -51,8 +53,9 @@ const ArtistDashboard = () => {
   };
 
   const handleDeleteArtwork = (artworkId) => {
-    if (token) {
-      dispatch(deleteArtwork({ artworkId, token }))
+    const storedToken = localStorage.getItem('token') || token;
+    if (storedToken) {
+      dispatch(deleteArtwork({ artworkId, token: storedToken }))
         .then(() => toast.success('Artwork deleted successfully'))
         .catch(() => toast.error('Error deleting artwork'));
     }
@@ -60,8 +63,9 @@ const ArtistDashboard = () => {
 
   const handleUpdateArtwork = (e) => {
     e.preventDefault();
-    if (token && selectedArtwork) {
-      dispatch(updateArtwork({ artworkId: selectedArtwork._id, updatedArtwork: newArtwork, token }))
+    const storedToken = localStorage.getItem('token') || token;
+    if (storedToken && selectedArtwork) {
+      dispatch(updateArtwork({ artworkId: selectedArtwork._id, updatedArtwork: newArtwork, token: storedToken }))
         .then(() => {
           toast.success('Artwork updated successfully');
           setShowModal(false);

@@ -22,18 +22,18 @@ const Header = () => {
 
   return (
     <Navbar expand="lg" className="custom-navbar">
-      <Navbar.Brand as={Link} to="/" className="brand-name">ArtVista</Navbar.Brand>
+      <Navbar.Brand as={Link} to="/home" className="brand-name">ArtVista</Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="ml-auto">
-          <Nav.Link as={Link} to="/">Home</Nav.Link>
+          <Nav.Link as={Link} to="/home">Home</Nav.Link>
           <Nav.Link as={Link} to="/cart" className="cart-link">
             <i className="fas fa-shopping-cart"></i>
             {cart.length > 0 && (
               <Badge pill className="cart-badge">{cart.length}</Badge>
             )}
           </Nav.Link>
-          <Nav.Link as={Link} to="/artistdashboard">Artist Dashboard</Nav.Link>
+          {/* <Nav.Link as={Link} to="/artistdashboard">Artist Dashboard</Nav.Link> */}
           <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
         </Nav>
       </Navbar.Collapse>

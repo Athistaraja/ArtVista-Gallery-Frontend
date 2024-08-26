@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Button, Form } from 'react-bootstrap';
-import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart, removeFromCart } from '../slices/cartSlice';
+import { updateRating } from '../slices/ratingSlice';
 import { API } from '../API';
-import Rating from 'react-rating'; 
-import './Body.css'; 
+import axios from 'axios';
+import Rating from 'react-rating';
+import './Body.css';
 
 const Body = () => {
   const [artworks, setArtworks] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
+  const ratings = useSelector((state) => state.rating); // Fetch the ratings array
 
   useEffect(() => {
     const fetchArtworks = async () => {
@@ -36,18 +37,20 @@ const Body = () => {
   };
 
   const isInCart = (artworkId) => {
-    return cart.some(item => item._id === artworkId);
+    return cart.some((item) => item._id === artworkId);
   };
 
-  const handleRatingChange = async (rating, artworkId) => {
-    try {
-      await axios.patch(`${API}/artwork/${artworkId}/rating`, { rating });
-    } catch (error) {
-      console.error('Error updating rating:', error);
-    }
+  const handleRatingChange = (rating, artworkId) => {
+    dispatch(updateRating({ artworkId, rating }));
   };
 
-  const filteredArtworks = artworks.filter(artwork =>
+  const getAverageRating = (artworkId) => {
+    if (!ratings) return 'N/A'; // Check if ratings are undefined
+    const artwork = ratings.find((artwork) => artwork._id === artworkId);
+    return artwork && artwork.rating ? artwork.rating.toFixed(1) : 'N/A';
+  };
+
+  const filteredArtworks = artworks.filter((artwork) =>
     selectedCategory ? artwork.category.toLowerCase() === selectedCategory.toLowerCase() : true
   );
 
@@ -68,11 +71,6 @@ const Body = () => {
             <option value="animation">Animation</option>
             <option value="drawing">Drawing</option>
             <option value="sculpture">Sculpture</option>
-            {categories.map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
           </Form.Control>
         </Form.Group>
       </Form>
@@ -87,11 +85,12 @@ const Body = () => {
                 <Card.Text>{artwork.artist.username}</Card.Text>
                 <Card.Text>{artwork.description}</Card.Text>
                 <Card.Text>Rs.{artwork.price}</Card.Text>
+                <Card.Text>Rating: {getAverageRating(artwork._id)}</Card.Text>
                 <Rating
-                  emptySymbol={<i className="fa fa-star transparent-star" />} 
-                  fullSymbol={<i className="fa fa-star yellow-star" />} 
-                  initialRating={artwork.rating} 
-                  onChange={(rating) => handleRatingChange(rating, artwork._id)} 
+                  emptySymbol={<i className="fa fa-star transparent-star" />}
+                  fullSymbol={<i className="fa fa-star yellow-star" />}
+                  initialRating={artwork.rating}
+                  onChange={(rating) => handleRatingChange(rating, artwork._id)}
                 />
                 <div className="mt-3">
                   {isInCart(artwork._id) ? (
