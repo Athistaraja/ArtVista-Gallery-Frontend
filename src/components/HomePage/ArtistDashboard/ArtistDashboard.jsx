@@ -26,6 +26,7 @@ const ArtistDashboard = () => {
 
   const [selectedArtwork, setSelectedArtwork] = useState(null); // Track the selected artwork for updating
   const [showModal, setShowModal] = useState(false); // Control the visibility of the update modal
+  const [showAddForm, setShowAddForm] = useState(false); // Control the visibility of the add artwork form
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token') || token; // Get token from localStorage or Redux
@@ -47,6 +48,7 @@ const ArtistDashboard = () => {
         .then(() => {
           toast.success('Artwork added successfully');
           setNewArtwork({ title: '', description: '', price: '', image: '', category: '' });
+          setShowAddForm(false); // Hide form after adding artwork
         })
         .catch(() => toast.error('Error adding artwork'));
     }
@@ -106,33 +108,83 @@ const ArtistDashboard = () => {
       <h2>Artist Dashboard</h2>
       <h3>Welcome, {username}</h3>
 
-      <Form onSubmit={handleAddArtwork} className="my-4">
-        <Form.Group controlId="title">
-          <Form.Label>Title</Form.Label>
-          <Form.Control type="text" name="title" value={newArtwork.title} onChange={handleChange} required />
-        </Form.Group>
-        <Form.Group controlId="description">
-          <Form.Label>Description</Form.Label>
-          <Form.Control as="textarea" name="description" value={newArtwork.description} onChange={handleChange} required />
-        </Form.Group>
-        <Form.Group controlId="price">
-          <Form.Label>Price</Form.Label>
-          <Form.Control type="number" name="price" value={newArtwork.price} onChange={handleChange} required />
-        </Form.Group>
-        <Form.Group controlId="image">
-          <Form.Label>Image URL</Form.Label>
-          <Form.Control type="text" name="image" value={newArtwork.image} onChange={handleChange} required />
-        </Form.Group>
-        <Form.Group controlId="category">
-          <Form.Label>Category</Form.Label>
-          <Form.Control type="text" name="category" value={newArtwork.category} onChange={handleChange} required />
-        </Form.Group>
-        <Button type="submit">Add Artwork</Button>
-      </Form>
+      {/* Toggle Add Artwork Form */}
+      <Button
+        variant="primary"
+        onClick={() => setShowAddForm(!showAddForm)}
+        className="mb-4"
+      >
+        {showAddForm ? 'Cancel' : 'Add Artwork'}
+      </Button>
+
+      {/* Add Artwork Form (conditionally rendered) */}
+      {showAddForm && (
+        <Form onSubmit={handleAddArtwork} className="my-4">
+          <Form.Group controlId="title">
+            <Form.Label>Title</Form.Label>
+            <Form.Control
+              type="text"
+              name="title"
+              value={newArtwork.title}
+              onChange={handleChange}
+              required
+            />
+          </Form.Group>
+          <Form.Group controlId="description">
+            <Form.Label>Description</Form.Label>
+            <Form.Control
+              as="textarea"
+              name="description"
+              value={newArtwork.description}
+              onChange={handleChange}
+              required
+            />
+          </Form.Group>
+          <Form.Group controlId="price">
+            <Form.Label>Price</Form.Label>
+            <Form.Control
+              type="number"
+              name="price"
+              value={newArtwork.price}
+              onChange={handleChange}
+              required
+            />
+          </Form.Group>
+          <Form.Group controlId="image">
+            <Form.Label>Image URL</Form.Label>
+            <Form.Control
+              type="text"
+              name="image"
+              value={newArtwork.image}
+              onChange={handleChange}
+              required
+            />
+          </Form.Group>
+          <Form.Group controlId="category">
+            <Form.Label>Category</Form.Label>
+            <Form.Select
+              name="category"
+              value={newArtwork.category}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select a category</option>
+              <option value="Painting">Painting</option>
+              <option value="Sculpture">Sculpture</option>
+              <option value="drawing">Drawing</option>
+              <option value="Photography">Photography</option>
+              <option value="animation">Animation</option>
+  
+            </Form.Select>
+          </Form.Group>
+          <Button type="submit">Add Artwork</Button>
+        </Form>
+      )}
 
       {status === 'loading' && <p>Loading...</p>}
       {status === 'failed' && <p>Error: {error}</p>}
 
+      {/* Display all artworks */}
       <Row>
         {status === 'succeeded' &&
           artworks.map((artwork) => (
@@ -143,10 +195,17 @@ const ArtistDashboard = () => {
                   <Card.Title>{artwork.title}</Card.Title>
                   <Card.Text>{artwork.description}</Card.Text>
                   <Card.Text>Rs.{artwork.price}</Card.Text>
-                  <Button variant="danger" onClick={() => handleDeleteArtwork(artwork._id)}>
+                  <Button
+                    variant="danger"
+                    onClick={() => handleDeleteArtwork(artwork._id)}
+                  >
                     Delete
                   </Button>
-                  <Button variant="primary" className="ms-2" onClick={() => openUpdateModal(artwork)}>
+                  <Button
+                    variant="primary"
+                    className="ms-2"
+                    onClick={() => openUpdateModal(artwork)}
+                  >
                     Update
                   </Button>
                 </Card.Body>
@@ -164,23 +223,59 @@ const ArtistDashboard = () => {
           <Form onSubmit={handleUpdateArtwork}>
             <Form.Group controlId="title">
               <Form.Label>Title</Form.Label>
-              <Form.Control type="text" name="title" value={newArtwork.title} onChange={handleChange} required />
+              <Form.Control
+                type="text"
+                name="title"
+                value={newArtwork.title}
+                onChange={handleChange}
+                required
+              />
             </Form.Group>
             <Form.Group controlId="description">
               <Form.Label>Description</Form.Label>
-              <Form.Control as="textarea" name="description" value={newArtwork.description} onChange={handleChange} required />
+              <Form.Control
+                as="textarea"
+                name="description"
+                value={newArtwork.description}
+                onChange={handleChange}
+                required
+              />
             </Form.Group>
             <Form.Group controlId="price">
               <Form.Label>Price</Form.Label>
-              <Form.Control type="number" name="price" value={newArtwork.price} onChange={handleChange} required />
+              <Form.Control
+                type="number"
+                name="price"
+                value={newArtwork.price}
+                onChange={handleChange}
+                required
+              />
             </Form.Group>
             <Form.Group controlId="image">
               <Form.Label>Image URL</Form.Label>
-              <Form.Control type="text" name="image" value={newArtwork.image} onChange={handleChange} required />
+              <Form.Control
+                type="text"
+                name="image"
+                value={newArtwork.image}
+                onChange={handleChange}
+                required
+              />
             </Form.Group>
             <Form.Group controlId="category">
               <Form.Label>Category</Form.Label>
-              <Form.Control type="text" name="category" value={newArtwork.category} onChange={handleChange} required />
+              <Form.Select
+                name="category"
+                value={newArtwork.category}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select a category</option>
+                <option value="Painting">Painting</option>
+                <option value="Sculpture">Sculpture</option>
+                <option value="animation">Animation</option>
+                <option value="Photography">Photography</option>
+                <option value="drawing">Drawing</option>
+              </Form.Select>
             </Form.Group>
             <Button type="submit">Update Artwork</Button>
           </Form>

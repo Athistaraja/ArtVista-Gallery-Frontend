@@ -43,7 +43,7 @@ const Login = () => {
 
       toast.success('Login successful');
       if (role === 'artist') {
-        navigate('/artist-dashboard');
+        navigate('/home');
       } else {
         navigate('/home');
       }

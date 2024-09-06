@@ -7,6 +7,7 @@ import './Header.css'; // Ensure this is correctly imported
 
 const Header = () => {
   const cart = useSelector((state) => state.cart);
+  const userRole = localStorage.getItem('role'); // Retrieve role from local storage
   const navigate = useNavigate(); // For redirecting after logout
 
   const handleLogout = () => {
@@ -14,6 +15,7 @@ const Header = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
     localStorage.removeItem('role');
+    localStorage.removeItem('cart');
 
     // Redirect to the login page
     toast.success('Logged out successfully');
@@ -33,7 +35,9 @@ const Header = () => {
               <Badge pill className="cart-badge">{cart.length}</Badge>
             )}
           </Nav.Link>
-          {/* <Nav.Link as={Link} to="/artistdashboard">Artist Dashboard</Nav.Link> */}
+          {userRole === 'artist' && (
+            <Nav.Link as={Link} to="/artist-dashboard">Artist Dashboard</Nav.Link>
+          )}
           <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
         </Nav>
       </Navbar.Collapse>

@@ -69,6 +69,11 @@ const CartPage = () => {
               Proceed to Checkout
             </Button>
           </div>
+          <div>
+          <Button variant="primary" onClick={() => navigate('/home')}>
+  Continue Shopping
+</Button>
+          </div>
 
 
     </Container>

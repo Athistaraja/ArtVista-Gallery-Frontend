@@ -23,6 +23,7 @@ const authSlice = createSlice({
       localStorage.setItem('username', username);
       localStorage.setItem('role', role);
     },
+    
     logout: (state) => {
       state.token = null;
       state.userId = null;
@@ -32,6 +33,7 @@ const authSlice = createSlice({
       localStorage.removeItem('userId');
       localStorage.removeItem('username');
       localStorage.removeItem('role');
+      localStorage.removeItem('cart');
     },
   },
 });

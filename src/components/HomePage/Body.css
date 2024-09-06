@@ -31,16 +31,48 @@
 }
 
 /* Card Title Styling */
-.card-title {
+.custom-card-title {
   font-size: 1.25rem;
-  font-weight: 600;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+/* Card Artist styling */
+.custom-card-artist {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #555;
   margin-bottom: 0.75rem;
 }
 
-/* Card Text Styling */
-.card-text {
-  color: #6c757d;
-  margin-bottom: 1rem;
+/* Card Description styling */
+.custom-card-description {
+  font-size: 0.9rem;
+  color: #777;
+  margin-bottom: 0.75rem;
+}
+
+/* Card Price styling */
+.custom-card-price {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+/* Styling for the price */
+.custom-card-price .price {
+  color: #28a745; /* Green color for price */
+  margin-right: 10px;
+}
+
+/* Styling for the offer text */
+.custom-card-price .offer-text {
+  background-color: #f8d7da; /* Light red background */
+  color: #721c24; /* Dark red text */
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 /* Button Styling */

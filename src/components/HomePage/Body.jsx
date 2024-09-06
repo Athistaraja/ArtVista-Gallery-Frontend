@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Button, Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart, removeFromCart } from '../slices/cartSlice';
-import { updateRating } from '../slices/ratingSlice';
+import { fetchRatings, updateRating } from '../slices/ratingSlice';
 import { API } from '../API';
 import axios from 'axios';
 import Rating from 'react-rating';
@@ -11,25 +11,40 @@ import './Body.css';
 const Body = () => {
   const [artworks, setArtworks] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [offers, setOffers] = useState({});
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
-  const ratings = useSelector((state) => state.rating); // Fetch the ratings array
+  const ratings = useSelector((state) => state.ratings);
 
   useEffect(() => {
     const fetchArtworks = async () => {
       try {
         const response = await axios.get(`${API}/artwork`);
-        setArtworks(response.data);
+        const fetchedArtworks = response.data;
+        setArtworks(fetchedArtworks);
+
+        // Generate and store offers once when artworks are fetched
+        const initialOffers = {};
+        fetchedArtworks.forEach((artwork) => {
+          initialOffers[artwork._id] = getRandomOffer();
+        });
+        setOffers(initialOffers);
       } catch (error) {
         console.error('Error fetching artworks:', error);
       }
     };
 
+    const fetchRatingsData = async () => {
+      dispatch(fetchRatings());
+    };
+
     fetchArtworks();
-  }, []);
+    fetchRatingsData();
+  }, [dispatch]);
 
   const handleAddToCart = (artwork) => {
     dispatch(addToCart(artwork));
+    // No need to update offers here
   };
 
   const handleRemoveFromCart = (artworkId) => {
@@ -45,9 +60,14 @@ const Body = () => {
   };
 
   const getAverageRating = (artworkId) => {
-    if (!ratings) return 'N/A'; // Check if ratings are undefined
+    if (!ratings) return 'N/A';
     const artwork = ratings.find((artwork) => artwork._id === artworkId);
     return artwork && artwork.rating ? artwork.rating.toFixed(1) : 'N/A';
+  };
+
+  const getRandomOffer = () => {
+    const offers = [5, 10, 15, 20, 25]; // Possible discount percentages
+    return offers[Math.floor(Math.random() * offers.length)];
   };
 
   const filteredArtworks = artworks.filter((artwork) =>
@@ -67,9 +87,10 @@ const Body = () => {
             className="filter-form-control"
           >
             <option value="">All</option>
-            <option value="painting">Painting</option>
+            <option value="Painting">Painting</option>
             <option value="animation">Animation</option>
             <option value="drawing">Drawing</option>
+            <option value="Photography">Photography</option>
             <option value="sculpture">Sculpture</option>
           </Form.Control>
         </Form.Group>
@@ -78,14 +99,17 @@ const Body = () => {
       <Row>
         {filteredArtworks.map((artwork) => (
           <Col xs={12} sm={6} md={4} lg={3} key={artwork._id} className="d-flex align-items-stretch">
-            <Card className="mb-4">
-              <Card.Img variant="top" src={artwork.image} alt={artwork.title} />
+            <Card className="mb-4 custom-card">
+              <Card.Img variant="top" src={artwork.image} alt={artwork.title} className="custom-card-img" />
               <Card.Body>
-                <Card.Title>{artwork.title}</Card.Title>
-                <Card.Text>{artwork.artist.username}</Card.Text>
-                <Card.Text>{artwork.description}</Card.Text>
-                <Card.Text>Rs.{artwork.price}</Card.Text>
-                <Card.Text>Rating: {getAverageRating(artwork._id)}</Card.Text>
+                <Card.Title className="custom-card-title">{artwork.title}</Card.Title>
+                <Card.Text className="custom-card-artist">by {artwork.artist.username}</Card.Text>
+                <Card.Text className="custom-card-description">{artwork.description}</Card.Text>
+                <Card.Text className="custom-card-price">
+                  <span className="price">Rs. {artwork.price}</span>
+                  <span className="offer-text">{offers[artwork._id] || 'No offer' }% OFF</span>
+                </Card.Text>
+                <Card.Text className="custom-card-rating">Rating: {getAverageRating(artwork._id)}</Card.Text>
                 <Rating
                   emptySymbol={<i className="fa fa-star transparent-star" />}
                   fullSymbol={<i className="fa fa-star yellow-star" />}
