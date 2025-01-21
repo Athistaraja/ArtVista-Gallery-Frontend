@@ -88,11 +88,11 @@ const Register = () => {
                 <ErrorMessage name="password" component="div" className="text-danger" />
               </div>
               <div className="form-group">
-                <label htmlFor="role">Role</label>
-                <Field as="select" id="role" name="role" className="form-control">
-                  <option value="user">User</option>
-                  <option value="artist">Artist</option>
-                </Field>
+                <label htmlFor="role">Select Role:</label>
+            <Field as="select" id="role" name="role" className="form-control">
+              <option value="user">User</option>
+              <option value="artist">Artist</option>
+            </Field>
                 <ErrorMessage name="role" component="div" className="text-danger" />
               </div>
               <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
