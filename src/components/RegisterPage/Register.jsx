@@ -87,7 +87,7 @@ const Register = () => {
                 </div>
                 <ErrorMessage name="password" component="div" className="text-danger" />
               </div>
-              <div className="form-group">
+              <div className="form-group custom-dropdown">
                 <label htmlFor="role">Select Role:</label>
             <Field as="select" id="role" name="role" className="form-control">
               <option value="user">User</option>
